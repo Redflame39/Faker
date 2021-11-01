@@ -9,5 +9,7 @@ namespace Faker.Generators
     public interface IGenerator
     {
         object GetRandomValue();
+
+        Type GeneratorType { get; }
     }
 }

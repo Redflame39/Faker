@@ -7,7 +7,7 @@ using Faker.Generators;
 
 namespace Faker
 {
-    class Faker : IFaker
+    public class Faker : IFaker
     {
         private readonly List<Type> circularReferencesEncounter;
 
@@ -90,7 +90,7 @@ namespace Faker
             instance = null;
             if (generators.TryGetValue(type, out IGenerator generator))
             {
-                instance = generator.GetRandomValue();
+                instance = generator.Generate();
                 return true;
             }
 
