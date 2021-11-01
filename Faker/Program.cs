@@ -6,7 +6,9 @@ namespace Faker
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var faker = new Faker();
+            User user = faker.Create<User>();
+            Console.WriteLine(user);
         }
     }
 }

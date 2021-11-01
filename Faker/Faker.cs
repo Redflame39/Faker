@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Faker.Generators;
@@ -80,7 +81,7 @@ namespace Faker
             if (!type.IsArray)
                 return false;
 
-            instance = (new ArrayGenerator(this, type)).Create();
+            instance = (new ArrayGenerator(this, type)).GetRandomValue();
 
             return true;
         }
@@ -90,7 +91,7 @@ namespace Faker
             instance = null;
             if (generators.TryGetValue(type, out IGenerator generator))
             {
-                instance = generator.Generate();
+                instance = generator.GetRandomValue();
                 return true;
             }
 
