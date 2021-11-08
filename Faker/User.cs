@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Faker
 {
-    class User
+    public class User
     {
         public string name;
         public int age { get; set; }
@@ -16,24 +16,29 @@ namespace Faker
 
     }
 
-    class Dog
+    public class Dog
     {
         public String name;
         public User owner;
 
+        private Dog()
+        {
+
+        }
+
+
     }
 
-    class Profile
+    public class Profile
     {
         public String address;
         public Profile()
         {
-
         }
         public Profile(string addr)
         {
-            //throw new Exception();
-            //address = addr;
+            address = addr;
+            throw new Exception();
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Faker.Generators
 {
-    class DateGenerator : IGenerator
+    public class DateGenerator : IGenerator
     {
         public Type GeneratorType => typeof(DateTime);
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Faker.Generators
 {
-    class FloatGenerator : IGenerator
+    public class FloatGenerator : IGenerator
     {
         public Type GeneratorType => typeof(float);
 

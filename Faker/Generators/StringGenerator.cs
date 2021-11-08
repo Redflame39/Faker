@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace Faker.Generators
 {
-    class StringGenerator : IGenerator
+    public class StringGenerator : IGenerator
     {
         public Type GeneratorType => typeof(string);
+        private const int MaxStringLength = 16;
 
         public object GetRandomValue()
         {
             Random random = new Random();
-            int length = random.Next(byte.MaxValue);
             StringBuilder builder = new StringBuilder();
             CharGenerator chr = new CharGenerator();
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < MaxStringLength; i++)
             {
                 builder.Append(chr.GetRandomValue());
             }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Faker.Generators;
@@ -124,19 +125,31 @@ namespace Faker
 
             var innerTypes = type.GetGenericArguments();
             Type gType = innerTypes[0];
-            //Console.WriteLine(gType.Name);
             int count = new Random().Next(1, 20);
-            instance = Activator.CreateInstance(type);
+            try
+            {
+                instance = Activator.CreateInstance(type);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
             object[] arr = new object[1];
             for (int i = 0; i < count; ++i)
             {
                 arr[0] = Create(gType);
-                type.GetMethod("Add").Invoke(instance, arr);
+                try
+                {
+                    type.GetMethod("Add").Invoke(instance, arr);
+                } 
+                catch(Exception)
+                {
+                    return false;
+                }
             }
 
             return true;
         }
-
 
         private bool TryGenerateCls(Type type, out object instance)
         {
@@ -161,49 +174,51 @@ namespace Faker
                 circularReferencesEncounter.Remove(type);
 
                 return true;
+            } 
+            else
+            {
+                instance = FormatterServices.GetUninitializedObject(type);
+                GenerateFillProps(instance, type);
+                GenerateFillFields(instance, type);
+
+                circularReferencesEncounter.Remove(type);
+                return true;
             }
 
-            return false;
+            //return false;
         }
 
         private bool TryConstruct(Type type, out object instance)
         {
             instance = null;
-
-            if (TryGetMaxParamsConstructor(type, out ConstructorInfo ctn))
-            {
-                var prms = GenerateConstructorParams(ctn);
-
-                instance = ctn.Invoke(prms);
-
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool TryGetMaxParamsConstructor(Type type, out ConstructorInfo ctn)
-        {
-            ctn = null;
-
             var ctns = type.GetConstructors();
 
             if (ctns.Length == 0)
                 return false;
 
+            Array.Sort(ctns, 
+                Comparer<ConstructorInfo>.Create(
+                    (c1, c2) => 
+                    c2.GetParameters().Length.CompareTo(c1.GetParameters().Length)));
+
             foreach (var locCtn in ctns)
             {
-                if (locCtn.IsPublic &&
-                    (ctn == null || locCtn.GetParameters().Length > ctn.GetParameters().Length))
+                if (locCtn.IsPublic)
                 {
-                    ctn = locCtn;
+                    var prms = GenerateConstructorParams(locCtn);
+                    try
+                    {
+                        instance = locCtn.Invoke(prms);
+                    }
+                    catch (Exception)
+                    {
+                        continue;
+                    }
+
+                    return true;
                 }
             }
-
-            if (ctn == null)
-                return false;
-
-            return true;
+            return false;
         }
 
         private void GenerateFillProps(object instance, Type type)

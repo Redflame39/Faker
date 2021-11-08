@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Faker.Generators
 {
-    class ShortGenerator : IGenerator
+    public class ShortGenerator : IGenerator
     {
         public Type GeneratorType => typeof(short);
 

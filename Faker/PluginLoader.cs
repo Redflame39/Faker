@@ -11,7 +11,11 @@ namespace Faker
 {
     public class PluginLoader
     {
-        private static readonly string PluginPath = Path.Combine("D:\\5 семестр\\СПП\\2\\Faker\\Main\\bin\\Debug\\net5.0", "plugins"); //todo 
+        private static readonly List<string> PluginPaths = new List<string>
+        {
+            "C:/Users/vanya/source/repos/Faker/FloatGenerator/bin/Debug/net5.0/ULongGeneratorPlugin.dll",
+            "C:/Users/vanya/source/repos/Faker/UIntGeneratorPlugin/bin/Debug/net5.0/UIntGeneratorPlugin.dll"
+        }; 
         private Dictionary<Type, IGenerator> generators;
 
         public PluginLoader(Dictionary<Type, IGenerator> gen)
@@ -21,16 +25,18 @@ namespace Faker
 
         public void LoadPluginGenerators()
         {
-            Console.WriteLine(PluginPath);
-            if (!Directory.Exists(PluginPath))
-                return;
-
-            string[] files = Directory.GetFiles(PluginPath, "*.dll");
-
-            foreach (var file in files)
+            foreach (string file in PluginPaths)
             {
-                Assembly assembly = Assembly.LoadFrom(file);
-                LoadPluginGenerator(assembly);
+                if (!File.Exists(file))
+                {
+                    TextWriter error = Console.Error;
+                    error.Write("Failed to load plugin " + file);
+                } 
+                else
+                {
+                    Assembly assembly = Assembly.LoadFrom(file);
+                    LoadPluginGenerator(assembly);
+                }
             }
         }
 

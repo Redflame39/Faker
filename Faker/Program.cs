@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Faker
 {
@@ -8,7 +9,8 @@ namespace Faker
         {
             var faker = new Faker();
             User user = faker.Create<User>();
-            Console.WriteLine(user);
+            string userJson = JsonConvert.SerializeObject(user, Formatting.Indented);
+            Console.WriteLine(userJson);
         }
     }
 }

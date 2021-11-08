@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Faker.Generators
 {
-    class CharGenerator : IGenerator 
+    public class CharGenerator : IGenerator 
     {
         static string Symbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         public Type GeneratorType => typeof(Char);
